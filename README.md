@@ -3,7 +3,7 @@ Web-based application used for extracting handwritten text and table data from p
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the `/frontend` directory, you can run:
 
 ### `npm start`
 
