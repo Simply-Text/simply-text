@@ -31,11 +31,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ## To Deploy:
 ### Frontend:
-In `/frontend` run `npm run build`
-Then use
-```git add build -f
-git commit -m "commit message"
-git subtree push --prefix dist origin  gh-pages```
+In `/frontend` run `npm run build` then `npm run deploy`
 
 
 
