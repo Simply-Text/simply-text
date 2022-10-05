@@ -6,6 +6,7 @@ function App() {
       <header className="App-header">
         <h1 className="company-title">SimplyText</h1>
       </header>
+      <p>text</p>
       
     </div>
   );
