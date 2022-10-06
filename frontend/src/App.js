@@ -1,4 +1,5 @@
-import './App.css';
+import "./App.css";
+import { FirebaseApp } from "firebase/app";
 
 function App() {
   return (
@@ -6,8 +7,7 @@ function App() {
       <header className="App-header">
         <h1 className="company-title">SimplyText</h1>
       </header>
-      <p>text</p>
-      
+      <p>text tetshsbdcmbm</p>
     </div>
   );
 }
