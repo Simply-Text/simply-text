@@ -1,6 +1,7 @@
 import "./App.css";
 import { FirebaseApp } from "firebase/app";
 import Login from "./components/Login";
+import CamPreview from "./components/CamPreview"
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       </Router>
 
       <p>text</p>
+      <CamPreview />
     </div>
   );
 }
