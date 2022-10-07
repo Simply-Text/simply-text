@@ -9,7 +9,7 @@ function App() {
       <header className="App-header">
         <h1 className="company-title">SimplyText</h1>
       </header>
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <Routes>
           <Route exact path="/" element={<Login />}></Route>
         </Routes>
