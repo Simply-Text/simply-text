@@ -3,7 +3,7 @@ import Webcam from "react-webcam";
 
 const imageConstraints = {
   aspectRatio: 0.7727,
-  facingMode: "environment",
+  facingMode: { exact: "environment" },
 };
 
 // Will add screenshot functionality and look into appropriate resolution
