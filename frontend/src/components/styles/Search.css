@@ -1,0 +1,23 @@
+.search-field{
+    background-color: lightgrey;
+    width: fit-content;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10%/50%;
+}
+
+*.search-box{
+    background-color: lightgrey;
+    height: auto;
+    border: 0;
+}
+button.search-field{
+    width: max-content;
+    height: auto;
+}
+button.search-filters{
+    width: fit-content;
+    height: fit-content;
+    background: lightgrey;
+    border-radius: 2px;
+}
