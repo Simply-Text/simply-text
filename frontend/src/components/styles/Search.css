@@ -21,3 +21,13 @@ button.search-filters{
     background: lightgrey;
     border-radius: 2px;
 }
+
+@keyframes enlarge {
+    from{
+
+    }
+
+    to{
+        width: inherit;
+    }
+}

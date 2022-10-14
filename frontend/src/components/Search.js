@@ -1,8 +1,8 @@
 import "./styles/Search.css";
 
 function Search() {
+    
     return (
-
         <div className="search-region">
             <div className="search-field">
                 <input type="text" className="search-box"></input>
@@ -19,13 +19,13 @@ function Search() {
             </div>
             <div className="search-filters">
                 <span className="date-filter">
-                    <button ></button>
+                    <button >Date</button>
                 </span>
                 <span className="author-filter">
-                    <button></button>
+                    <button>Author</button>
                 </span>
                 <span className="content-filter">
-                    <button></button>
+                    <button>Content</button>
                 </span>
             </div>
             <div className="search-results">

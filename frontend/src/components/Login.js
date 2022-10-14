@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   auth,
-  signInWithEmailAndPassword,
+  logInWithEmailAndPassword,
   signInWithGoogle,
 } from "../utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -48,7 +48,7 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
             />
-            <button onClick={() => signInWithEmailAndPassword(email, password)}>
+            <button onClick={() => logInWithEmailAndPassword(email, password)}>
               Login
             </button>
             <button
