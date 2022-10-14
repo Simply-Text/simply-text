@@ -4,7 +4,7 @@ import React, {useRef} from "react";
 
 const imageConstraints = {
   aspectRatio: 0.7727,
-  facingMode: { ideal: "environment" },
+  facingMode: { exact: "environment" },
 };
 
 const CamPreview = () => {
