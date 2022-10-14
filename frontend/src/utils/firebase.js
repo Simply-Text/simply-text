@@ -56,4 +56,47 @@ const signInWithGoogle = async () => {
   }
 };
 
-export { auth, db, signInWithGoogle };
+const logInWithEmailAndPassword = async (email, password) => {
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+const registerWithEmailAndPassword = async (name, email, password) => {
+  try {
+    const res = await createUserWithEmailAndPassword(auth, email, password);
+    const user = res.user;
+    await addDoc(collection(db, "users"), {
+      uid: user.uid,
+      name,
+      authProvider: "local",
+      email,
+    });
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+const sendPasswordReset = async (email) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+const logout = () => {
+  signOut(auth);
+};
+
+export {
+  auth,
+  db,
+  signInWithGoogle,
+  logInWithEmailAndPassword,
+  registerWithEmailAndPassword,
+  sendPasswordReset,
+  logout,
+};

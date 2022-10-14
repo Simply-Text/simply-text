@@ -16,7 +16,7 @@ function Login() {
 
   useEffect(() => {
     if (loading) {
-      //loading screen
+      //loading screen?
       return;
     }
     if (user) navigate("/dashboard");
@@ -34,6 +34,7 @@ function Login() {
               name="username"
               id="username"
               value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="E-mail address"
             />
             <label name="password"> Password</label>
@@ -44,10 +45,23 @@ function Login() {
               name="password"
               id="password"
               value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
             />
+            <button onClick={() => signInWithEmailAndPassword(email, password)}>
+              Login
+            </button>
+            <button
+              className="login__btn login__google"
+              onClick={signInWithGoogle}
+            >
+              Login with Google
+            </button>
             <Link to="/reset">Forgot Password</Link>
           </div>
+          {
+            // need to implement a register page
+          }
         </div>
         <div className="google-auth"></div>
         <div className="facebook-auth"></div>
