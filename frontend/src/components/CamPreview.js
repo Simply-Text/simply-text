@@ -4,7 +4,7 @@ import React, {useRef} from "react";
 
 const imageConstraints = {
   aspectRatio: 0.7727,
-  facingMode: { exact: "environment" },
+  facingMode: { ideal: "environment" },
 };
 
 const CamPreview = () => {
@@ -15,6 +15,10 @@ const CamPreview = () => {
     const imageSrc = camPreview.current.getScreenshot();
     setUrl(imageSrc);
   }, [camPreview]);
+
+  const flipCamera = () => {
+    imageConstraints.facingMode = { exact: "environment" };
+  };
 
   const onUserMedia = (e) => {
     console.log(e);
@@ -31,6 +35,7 @@ const CamPreview = () => {
       />
       <button onClick={capturePhoto}>Capture</button>
       <button onClick={() => setUrl(null)}>Refresh</button>
+      <button onClick={flipCamera}>Flip</button>
       {url && (
         <div>
           <img src={url} alt="Screenshot" />
