@@ -2,8 +2,8 @@ import "./styles/CamPreview.css";
 import Webcam from "react-webcam";
 import React, {useRef} from "react";
 
-const FACING_MODE_USER = { ideal: "user" };
-const FACING_MODE_ENVIRONMENT = { ideal: "environment" };
+const FACING_MODE_USER = { exact: "user" };
+const FACING_MODE_ENVIRONMENT = { exact: "environment" };
 
 const videoConstraints = {
   aspectRatio: 0.7727,
@@ -43,6 +43,7 @@ const CamPreview = () => {
       <Webcam
         ref={camPreview}
         screenshotFormat="image/png"
+        width={360}
         videoConstraints={{...videoConstraints, facingMode}}
         onUserMedia={onUserMedia}
         mirrored={isMirrored}
