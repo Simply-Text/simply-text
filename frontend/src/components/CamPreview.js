@@ -2,18 +2,18 @@ import "./styles/CamPreview.css";
 import Webcam from "react-webcam";
 import React, {useRef} from "react";
 
-const FACING_MODE_USER = "user";
-const FACING_MODE_ENVIRONMENT = "environment";
+let frontCamera = false;
 
 const videoConstraints = {
   aspectRatio: 0.7727,
-  facingMode: {exact: FACING_MODE_ENVIRONMENT},
+  facingMode: frontCamera ? "user" : "environmnet",
 };
 
 const CamPreview = () => {
   const camPreview = useRef(null);
   const [url, setUrl] = React.useState(null);
-  const [facingMode, setFacingMode] = React.useState(FACING_MODE_ENVIRONMENT);
+  const [facingMode, setFacingMode] = React.useState(frontCamera);
+  const [isMirrored, setIsMirrored] = React.useState(null);
 
   const capturePhoto = React.useCallback(async () => {
     const imageSrc = camPreview.current.getScreenshot();
@@ -21,17 +21,12 @@ const CamPreview = () => {
   }, [camPreview]);
 
   const flip = React.useCallback(() => {
-    setFacingMode(
-      prevState =>
-      prevState === FACING_MODE_USER
-      ? FACING_MODE_ENVIRONMENT
-      : FACING_MODE_USER
-      );
-  }, []);
 
-  const onUserMedia = (e) => {
-    console.log(e);
-  };
+    frontCamera = !frontCamera;
+    setFacingMode(frontCamera);
+
+    setIsMirrored(frontCamera);
+  }, []);
 
   return (
     <>
@@ -39,8 +34,7 @@ const CamPreview = () => {
         ref={camPreview}
         screenshotFormat="image/png"
         videoConstraints={{...videoConstraints, facingMode}}
-        onUserMedia={onUserMedia}
-        mirrored={true}
+        mirrored={isMirrored}
       />
       <button onClick={capturePhoto}>Capture</button>
       <button onClick={() => setUrl(null)}>Refresh</button>
