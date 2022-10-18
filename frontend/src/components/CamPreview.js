@@ -14,7 +14,6 @@ const CamPreview = () => {
   const camPreview = useRef(null);
   const [url, setUrl] = React.useState(null);
   const [facingMode, setFacingMode] = React.useState(FACING_MODE_ENVIRONMENT);
-  const [isMirrored, setIsMirrored] = React.useState(null);
 
   const capturePhoto = React.useCallback(async () => {
     const imageSrc = camPreview.current.getScreenshot();
@@ -30,9 +29,7 @@ const CamPreview = () => {
       : FACING_MODE_USER
     );
 
-    facingMode === FACING_MODE_ENVIRONMENT ? setIsMirrored(false) : setIsMirrored(true);
-      
-  }, [facingMode]);
+  }, []);
 
   const onUserMedia = (e) => {
     console.log(e);
@@ -46,11 +43,11 @@ const CamPreview = () => {
         width={360}
         videoConstraints={{...videoConstraints, facingMode}}
         onUserMedia={onUserMedia}
-        mirrored={isMirrored}
+        mirrored="false"
       />
       <button onClick={capturePhoto}>Capture</button>
       <button onClick={() => setUrl(null)}>Refresh</button>
-      <button onClick={() => flip()}>Flip</button>
+      <button onClick={flip}>Flip</button>
       {url && (
         <div>
           <img src={url} alt="Screenshot" />
