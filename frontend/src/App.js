@@ -1,9 +1,11 @@
 import "./App.css";
 import { FirebaseApp } from "firebase/app";
 import Login from "./components/Login";
-import CamPreview from "./components/CamPreview"
-import Search from "./components/Search"
+import ResetPassword from "./components/ResetPassword";
+import CamPreview from "./components/CamPreview";
+import Search from "./components/Search";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Register from "./components/Register";
 
 function App() {
   return (
@@ -14,11 +16,11 @@ function App() {
       <Router basename={process.env.PUBLIC_URL}>
         <Routes>
           <Route exact path="/" element={<Login />}></Route>
+          <Route exact path="/reset" element={<ResetPassword />}></Route>
+          <Route exact path="/register" element={<Register />}></Route>
           <Route exact path="/search" element={<Search />}></Route>
         </Routes>
       </Router>
-
-      <p>text</p>
       <CamPreview />
     </div>
   );
