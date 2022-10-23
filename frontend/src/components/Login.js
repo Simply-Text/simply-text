@@ -19,7 +19,7 @@ function Login() {
       //loading screen?
       return;
     }
-    if (user) navigate("/dashboard");
+    if (user) navigate("/capture");
   }, [user, loading]);
   return (
     <div>
@@ -28,7 +28,7 @@ function Login() {
           <div className="login-field">
             <div className="email-box">
               <label name="username" htmlFor="username">
-                Email:{" "}
+                Email:
               </label>
               <input
                 className="login-textbox"
@@ -43,8 +43,7 @@ function Login() {
             </div>
             <div className="password-box">
               <label name="password" htmlFor="password">
-                {" "}
-                Password:{" "}
+                Password:
               </label>
               <input
                 className="login-textbox"
