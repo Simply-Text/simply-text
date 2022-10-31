@@ -18,6 +18,7 @@ import {
   addDoc,
   DocumentSnapshot,
   getDoc,
+  getDocFromServer,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -42,7 +43,7 @@ const signInWithGoogle = async () => {
     const res = await signInWithPopup(auth, googleProvider);
     const user = res.user;
     const q = query(collection(db, "users"), where("uid", "==", user.uid));
-    const docs = await getDoc(q);
+    const docs = await getDocs(q);
     if (docs.docs.length === 0) {
       await addDoc(collection(db, "users"), {
         uid: user.uid,

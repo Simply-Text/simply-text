@@ -1,3 +1,7 @@
-.company-title{
-    color: var(--navy);
+.app {
+  text-align: center;
+}
+
+.company-title {
+  color: var(--navy);
 }
