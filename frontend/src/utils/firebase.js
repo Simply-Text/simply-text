@@ -92,6 +92,26 @@ const logout = () => {
   signOut(auth);
 };
 
+const simpleSearch = async (query) => {
+  try {
+    console.log(query);
+    const col = collection(db, "Pages");
+    const snapshot = await getDocs(col);
+
+    const docList = new Array();
+    snapshot.forEach((doc) => {
+      let content = doc.get("Content");
+      if(content.includes(query)){
+        docList.push("Date: " + doc.get("Date") + "\nAuthor: " + doc.get("Author") + "\nContent: " + doc.get("Content"));
+      }
+      
+    });
+    return docList;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export {
   auth,
   db,
@@ -100,4 +120,5 @@ export {
   registerWithEmailAndPassword,
   sendPasswordReset,
   logout,
+  simpleSearch
 };
