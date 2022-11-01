@@ -137,12 +137,12 @@ const searchWithFilters = async (query, filters) => {
 const addPage = async (author,content) => {
   const col = collection(db, "Pages");
   const d = new Date()
-  const date = d.getFullYear() + "/" + d.getMonth() + "/" + d.getDate();
+  const date = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate();
   await addDoc(col,{
-    Date: d,
+    Date: date,
     Author: author,
     Content: content
-  })
+  });
 }
 
 export {

@@ -37,7 +37,6 @@ const CamPreview = () => {
   const [base64, setBase64] = React.useState(null);
   const [extractedText, setExtractedText] = React.useState("No Extracted Text");
   const [facingMode, setFacingMode] = React.useState(FACING_MODE_ENVIRONMENT);
-  const [isMirrored, setIsMirrored] = React.useState(null);
 
   const capturePhoto = React.useCallback(async () => {
     const imageSrc = camPreview.current;
@@ -50,8 +49,7 @@ const CamPreview = () => {
       if(base64) {
         const result = await callGoogleVisionApi(base64);
         setExtractedText(result);
-        addPage("user", result);
-
+        await addPage("user", result);
       }
     }
 
@@ -67,9 +65,7 @@ const CamPreview = () => {
       : FACING_MODE_USER
     );
 
-    facingMode === FACING_MODE_ENVIRONMENT ? setIsMirrored(true) : setIsMirrored(false);
-
-  }, [facingMode]);
+  }, []);
 
   const onUserMedia = (e) => {
     console.log(e);
@@ -83,7 +79,7 @@ return (
         width={360}
         videoConstraints={{...videoConstraints, facingMode}}
         onUserMedia={onUserMedia}
-        mirrored={isMirrored}
+        mirrored={false}
         screenshotQuality={0.5}
       />
       <button onClick={capturePhoto}>Capture</button>
