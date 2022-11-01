@@ -4,6 +4,8 @@
   "homepage": "https://simply-text.github.io/simply-text/",
   "private": false,
   "dependencies": {
+    "@babel/register": "7.18.9",
+    "@babel/runtime": "^7.20.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
@@ -15,6 +17,7 @@
     "react-firebase-hooks": "^5.0.3",
     "react-router-dom": "^6.4.2",
     "react-webcam": "^7.0.1",
+    "typesense": "^v1.4.2",
     "web-vitals": "^3.0.2"
   },
   "scripts": {
