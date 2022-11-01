@@ -1,8 +1,8 @@
 
 
 const typesenseConfig = {
-    apiKey: "nWXLoyDGJs6gepzLRFVdKq8kFFbgHuz9qey0IrgKURz0hwTk",
-    hostName: "eedb-35-234-244-198.ngrok.io",
+    apiKey: "",
+    hostName: "",
     collection: "Pages"
 };
 const Typesense = require('typesense');

@@ -112,6 +112,28 @@ const simpleSearch = async (query) => {
   }
 }
 
+const searchWithFilters = async (query, filters) => {
+  try{
+  const col = collection(db, "Pages");
+  const snapshot = await getDocs(col);
+
+  const docList = new Array();
+  snapshot.forEach((doc) => {
+    let content = doc.get("Content");
+    let date = doc.get("Date");
+    let author = doc.get("Author");
+      if(content.includes(query) && ((filters.date == null)  ? true : date == filters.date) && (filters.author == null ? true : author == filters.author)){
+        docList.push("Date: " + doc.get("Date") + "\nAuthor: " + doc.get("Author") + "\nContent: " + doc.get("Content"));
+      }
+
+  });
+
+  return docList
+} catch (e){
+  console.error(e);
+}
+}
+
 export {
   auth,
   db,
@@ -120,5 +142,6 @@ export {
   registerWithEmailAndPassword,
   sendPasswordReset,
   logout,
-  simpleSearch
+  simpleSearch,
+  searchWithFilters
 };
