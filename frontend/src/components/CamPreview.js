@@ -3,7 +3,6 @@ import Webcam from "react-webcam";
 import React, {useEffect, useRef} from "react";
 import { CloudVisionApi } from "../utils/cloudConfig";
 import axios from 'axios';
-import { async } from "@firebase/util";
 
 const FACING_MODE_USER = { exact: "user" };
 const FACING_MODE_ENVIRONMENT = { exact: "environment" };
