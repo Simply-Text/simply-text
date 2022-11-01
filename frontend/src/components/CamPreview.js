@@ -3,7 +3,7 @@ import Webcam from "react-webcam";
 import React, {useEffect, useRef} from "react";
 import { CloudVisionApi } from "../utils/cloudConfig";
 import axios from 'axios';
-
+import {addPage} from "../utils/firebase"
 const FACING_MODE_USER = { exact: "user" };
 const FACING_MODE_ENVIRONMENT = { exact: "environment" };
 
@@ -50,6 +50,8 @@ const CamPreview = () => {
       if(base64) {
         const result = await callGoogleVisionApi(base64);
         setExtractedText(result);
+        addPage("user", result);
+
       }
     }
 

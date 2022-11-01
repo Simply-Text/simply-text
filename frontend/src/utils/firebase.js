@@ -134,6 +134,17 @@ const searchWithFilters = async (query, filters) => {
 }
 }
 
+const addPage = async (author,content) => {
+  const col = collection(db, "Pages");
+  const d = new Date()
+  const date = d.getFullYear() + "/" + d.getMonth() + "/" + d.getDate();
+  await addDoc(col,{
+    Date: d,
+    Author: author,
+    Content: content
+  })
+}
+
 export {
   auth,
   db,
@@ -143,5 +154,6 @@ export {
   sendPasswordReset,
   logout,
   simpleSearch,
-  searchWithFilters
+  searchWithFilters,
+  addPage
 };
