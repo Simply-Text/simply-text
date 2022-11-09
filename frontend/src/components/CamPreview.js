@@ -8,7 +8,6 @@ const FACING_MODE_USER = { exact: "user" };
 const FACING_MODE_ENVIRONMENT = { exact: "environment" };
 
 const videoConstraints = {
-  aspectRatio: 0.7727,
   facingMode: FACING_MODE_ENVIRONMENT,
 };
 
@@ -80,7 +79,7 @@ return (
         videoConstraints={{...videoConstraints, facingMode}}
         onUserMedia={onUserMedia}
         mirrored={false}
-        screenshotQuality={0.5}
+        screenshotQuality={0.7}
       />
       <button onClick={capturePhoto}>Capture</button>
       <button onClick={() => setUrl(null)}>Refresh</button>
