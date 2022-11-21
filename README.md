@@ -31,7 +31,8 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ## To Deploy:
 ### Frontend:
-In `/frontend` run `npm run build` then `npm run deploy`
+In `/frontend` run `npm run build` then 'firebase deploy'
+[View the website here](https://simply-text-ai.web.app)
 
 
 
