@@ -1,7 +1,7 @@
 {
   "name": "simply-text",
   "version": "0.1.0",
-  "homepage": "https://simply-text.github.io/simply-text/",
+  "homepage": "https://simply-text-ai.web.app/",
   "private": false,
   "dependencies": {
     "@babel/register": "7.18.9",

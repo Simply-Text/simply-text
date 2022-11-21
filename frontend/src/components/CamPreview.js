@@ -1,33 +1,22 @@
 import "./styles/CamPreview.css";
 import Webcam from "react-webcam";
 import React, {useEffect, useRef} from "react";
-import { CloudVisionApi } from "../utils/cloudConfig";
-import axios from 'axios';
 import {addPage} from "../utils/firebase"
+import { getFunctions, httpsCallable } from "firebase/functions";
 const FACING_MODE_USER = { exact: "user" };
 const FACING_MODE_ENVIRONMENT = { exact: "environment" };
+
+const functions = getFunctions();
+const cloudVisionCall = httpsCallable(functions, 'callCloudVision');
 
 const videoConstraints = {
   facingMode: FACING_MODE_ENVIRONMENT,
 };
 
 const callGoogleVisionApi = async(base64) => {
-  let googleVisionRes = await axios
-  .post(CloudVisionApi.api + CloudVisionApi.apiKey, {
-    "requests": [
-        {
-            "image": {
-                "content": base64
-            },
-            features: [
-              { type: "DOCUMENT_TEXT_DETECTION"}
-            ]
-        }
-    ],
-  })
-
-  const result = googleVisionRes.data.responses[0].fullTextAnnotation.text;
-  return result;
+  let googleVisionRes = await cloudVisionCall({image: base64});
+  const result = googleVisionRes;
+  return result.data.response.responses[0].fullTextAnnotation.text;
 }
 
 const CamPreview = () => {
