@@ -17,7 +17,7 @@ const videoConstraints = {
 const callGoogleVisionApi = async (base64) => {
   let googleVisionRes = await cloudVisionCall({ image: base64 });
   const result = googleVisionRes;
-  return result.data.response.responses[0].fullTextAnnotation.text;
+  return result.data
 }
 
 
@@ -32,12 +32,12 @@ const CamPreview = () => {
 
   //tesseract
   const worker = createWorker();
-  const runTesseract = async (base64) => {
+  const runTesseract = async (base64, rectangle) => {
     base64 = "data:image/png;base64," + base64;
     await worker.load();
     await worker.loadLanguage('eng');
     await worker.initialize('eng');
-    const { data: { text } } = await worker.recognize(base64);
+    const { data: { text } } = await worker.recognize(base64,rectangle);
     await worker.terminate();
     return text;
   }
@@ -53,11 +53,31 @@ const CamPreview = () => {
       if (base64) {
         console.log(base64);
         const result = await callGoogleVisionApi(base64);
-        const tessResult = await runTesseract(base64);
-        setExtractedText(result);
+        const visionText = result.response.responses[0].fullTextAnnotation.text;
+
+        //Tesseract
+        
+        console.log(result);
+
+        //find all rectangles
+        const rects = [];
+        
+        const vertices = result.response.responses[0].fullTextAnnotation.pages[0].blocks[0].boundingBox.vertices;
+        const xMin = Math.min(vertices[0].x,vertices[1].x,vertices[2].x,vertices[3].x);
+        const xMax = Math.max(vertices[0].x,vertices[1].x,vertices[2].x,vertices[3].x);
+        const yMin = Math.min(vertices[0].y,vertices[1].y,vertices[2].y,vertices[3].y);
+        const yMax = Math.max(vertices[0].y,vertices[1].y,vertices[2].y,vertices[3].y);
+        const w = xMax - xMin;
+        const h = yMax - yMin;
+
+        const rect = {rectangle: {top: yMin, left: xMin, width: w, height: h}};
+
+        const tessResult = await runTesseract(base64,rect);
+
+        setExtractedText(visionText);
         setTessText(tessResult);
 
-        await addPage("user", result);
+        await addPage("user", visionText);
       }
     }
 
