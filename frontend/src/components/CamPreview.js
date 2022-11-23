@@ -1,13 +1,14 @@
 import "./styles/CamPreview.css";
 import Webcam from "react-webcam";
-import React, { useEffect, useRef } from "react";
-import { addPage } from "../utils/firebase"
-import { getFunctions, httpsCallable } from "firebase/functions";
+import React, {useEffect, useRef} from "react";
+import {addPage} from "../utils/firebase"
+import { httpsCallable } from "firebase/functions";
+import { functions } from "../utils/firebase";
 import { createWorker } from "tesseract.js";
+
 const FACING_MODE_USER = { exact: "user" };
 const FACING_MODE_ENVIRONMENT = { exact: "environment" };
 
-const functions = getFunctions();
 const cloudVisionCall = httpsCallable(functions, 'callCloudVision');
 
 const videoConstraints = {
@@ -19,8 +20,6 @@ const callGoogleVisionApi = async (base64) => {
   const result = googleVisionRes;
   return result.data
 }
-
-
 
 const CamPreview = () => {
   const camPreview = useRef(null);
