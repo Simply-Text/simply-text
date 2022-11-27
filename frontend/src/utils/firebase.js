@@ -35,7 +35,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-export const functions = getFunctions(app, 'northamerica-northeast1');
+const functions = getFunctions(app, 'northamerica-northeast1');
 const auth = getAuth(app);
 const db = getFirestore(app);
 

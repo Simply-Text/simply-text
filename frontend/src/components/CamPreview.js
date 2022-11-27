@@ -2,13 +2,13 @@ import "./styles/CamPreview.css";
 import Webcam from "react-webcam";
 import React, {useEffect, useRef} from "react";
 import {addPage} from "../utils/firebase"
-import { httpsCallable } from "firebase/functions";
-import { functions } from "../utils/firebase";
+import { getFunctions, httpsCallable } from "firebase/functions";
 import { createWorker } from "tesseract.js";
 
 const FACING_MODE_USER = { exact: "user" };
 const FACING_MODE_ENVIRONMENT = { exact: "environment" };
 
+const functions = getFunctions(undefined, 'northamerica-northeast1');
 const cloudVisionCall = httpsCallable(functions, 'callCloudVision');
 
 const videoConstraints = {
