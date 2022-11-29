@@ -32,7 +32,7 @@ function UserInfo() {
             Logged in as
             {name}
             <div>{user?.email}</div>
-            <button className="dashboard__btn" onClick={handleLogout}>
+            <button className="dashboard__btn secondary button" onClick={handleLogout}>
               Logout
             </button>
           </div>
