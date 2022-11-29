@@ -1,4 +1,92 @@
-.CamPreview {
-    width:360px;
-    margin:auto;
+.webcam-component {
+    width: 360px;
+    height: 464px;
+    margin: auto;
+    margin-top: 10px;
+    padding: 0;
+    border: 2px solid black;
+    border-radius: 1px;
+}
+
+#outside-wrap {
+    width: 360px;
+    height: 465px;
+    margin: auto;
+}
+
+#image-container {
+    position: relative;
+    width: 100%; height: 100%;
+    position: relative;
+    flex: 1;
+    border: 20px solid transparent;
+}
+
+#image {
+    width:100%; height:100%; 
+    position:absolute; top:0px; left:0px;
+}
+
+#input-overlay {
+    width:100%; height:100%; 
+    position:absolute; top:0px; left:0px;
+    background-color: rgba(255,0,0,.1);
+}
+
+/* CSS */
+.button {
+    align-items: center;
+    background-color: #0A66C2;
+    border: 0;
+    border-radius: 100px;
+    box-sizing: border-box;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 16px;
+    font-weight: 600;
+    justify-content: center;
+    line-height: 20px;
+    max-width: 480px;
+    min-height: 40px;
+    min-width: 0px;
+    overflow: hidden;
+    padding: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: center;
+    touch-action: manipulation;
+    transition: background-color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, box-shadow 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle;
+    margin: 10px;
+}
+
+.button.secondary {
+    background-color: #d3d6d7;
+    color: rgb(49, 50, 54);
+}
+
+.button:hover,
+.button:focus { 
+    background-color: #16437E;
+    color: #ffffff;
+}
+
+.button.secondary:hover,
+.button.secondary:focus {
+    background-color: #bfbfbf;
+    color: rgb(70, 71, 77);
+}
+
+.button:active {
+    background: #09223b;
+    color: rgb(255, 255, 255, .7);
+}
+
+.button:disabled { 
+    cursor: not-allowed;
+    background: rgba(0, 0, 0, .08);
+    color: rgba(0, 0, 0, .3);
 }

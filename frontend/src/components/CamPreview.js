@@ -13,19 +13,34 @@ const cloudVisionCall = httpsCallable(functions, 'callCloudVision');
 
 const videoConstraints = {
   facingMode: FACING_MODE_ENVIRONMENT,
+  height: 465,
+  width: 360
 };
 
 const callGoogleVisionApi = async (base64) => {
   let googleVisionRes = await cloudVisionCall({ image: base64 });
   const result = googleVisionRes;
-  return result.data.response.responses[0].fullTextAnnotation.text;
+  return result.data.response.responses[0];
+}
+
+const draw = context => {
+  context.fillStyle = "rgba(0, 0, 200, 0.5)";
+  context.fillRect(30, 30, 50, 50);
+};
+
+const manageResult = async(result) => {
+
+  //Update canvas/overlay?
+
+  return(result.fullTextAnnotation.text);
 }
 
 const CamPreview = () => {
   const camPreview = useRef(null);
   const [url, setUrl] = React.useState(null);
   const [base64, setBase64] = React.useState(null);
-  const [extractedText, setExtractedText] = React.useState("No Extracted Text");
+  const [visionText, setVisionText] = React.useState("No Extracted Text");
+  const [visionResult, setVisionResult] = React.useState(undefined);
   const [tessText, setTessText] = React.useState("No Extracted Text")
   const [facingMode, setFacingMode] = React.useState(FACING_MODE_ENVIRONMENT);
 
@@ -50,10 +65,10 @@ const CamPreview = () => {
   useEffect(() => {
     async function fetchResult() {
       if (base64) {
-        console.log(base64);
         const result = await callGoogleVisionApi(base64);
         const tessResult = await runTesseract(base64);
-        setExtractedText(result);
+        setVisionResult(result);
+        setVisionText(await manageResult(result));
         setTessText(tessResult);
 
         await addPage("user", result);
@@ -74,31 +89,45 @@ const CamPreview = () => {
 
   }, []);
 
+  const clearScreen = React.useCallback(() => {
+    setVisionResult("No Extracted Text");
+    setTessText("No Extracted Text");
+    setUrl(null);
+  }, []);
+
   const onUserMedia = (e) => {
     console.log(e);
   };
 
   return (
     <>
-      <Webcam
-        ref={camPreview}
-        screenshotFormat="image/png"
-        width={360}
-        videoConstraints={{ ...videoConstraints, facingMode }}
-        onUserMedia={onUserMedia}
-        mirrored={false}
-        screenshotQuality={0.7}
-      />
-      <button onClick={capturePhoto}>Capture</button>
-      <button onClick={() => setUrl(null)}>Refresh</button>
-      <button onClick={flip}>Flip</button>
+      <div id="webcam">
+        <Webcam
+          className="webcam-component"
+          ref={camPreview}
+          screenshotFormat="image/png"
+          videoConstraints={{ ...videoConstraints, facingMode }}
+          onUserMedia={onUserMedia}
+          mirrored={false}
+          screenshotQuality={0.7}
+        />
+      </div>
+      <div className="button-group">
+        <button className="button secondary" onClick={() => clearScreen()}>Clear</button>
+        <button className="button" onClick={capturePhoto}>Capture</button>
+        <button className="button secondary" onClick={flip}>Flip</button>
+      </div>
       {url && (
-        <div>
-          <img src={url} alt="Screenshot" />
+        <div id="outside-wrap">
+          <div id="image-container">
+            <img id="image" src={url} alt="Screenshot" />
+          </div>
         </div>
       )}
-      <p>{extractedText}</p>
-      <p>{tessText}</p>
+      <div id="extractedText">
+        <p>{visionText}</p>
+        <p>{tessText}</p>
+      </div>
     </>
   );
 };
