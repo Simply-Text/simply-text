@@ -76,8 +76,8 @@ const CamPreview = () => {
           const w = xMax - xMin;
           const h = yMax - yMin;
 
-          const rect = { rectangle: { top: yMin, left: xMin, width: w, height: h } };
-          tessResult += " | " + await runTesseract(base64, rect);
+          const rect = { rectangle: { top: yMin-3, left: xMin-3, width: w+6, height: h+6 } };
+          //tessResult += " | " + await runTesseract(base64, rect);
 
           rects.push(rect);
         }
@@ -93,14 +93,15 @@ const CamPreview = () => {
         const context = canvas.getContext("2d");
 
         
-
+        context.fillStyle = "#FFFFFF";
+        context.fillRect(0,0,canvas.width,canvas.height);
         context.strokeStyle = "#00FF00";
         var image = new Image();
         image.onload = () => {
 
 
           context.drawImage(image, 0, 0);
-
+          
           //find lines
           //turn to black and white for line detection
           var width = image.width;
@@ -111,7 +112,7 @@ const CamPreview = () => {
             for (var x = 0; x < width; x++) {
               var i = (y * 4) * width + x * 4;
 
-              var total = ((imgPixels.data[i] + imgPixels.data[i + 1] + imgPixels.data[i + 2]) > 415) ? 255 : 0;
+              var total = ((imgPixels.data[i] + imgPixels.data[i + 1] + imgPixels.data[i + 2]) > 500) ? 255 : 0;
 
               imgPixels.data[i] = total;
               imgPixels.data[i + 1] = total;
@@ -122,19 +123,20 @@ const CamPreview = () => {
           context.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
 
           //TODO: add line detection
-
+          
           //draw rectangles
           for (let i = 0; i < rects.length; i++) {
             console.log(i);
             console.log(rects);
             context.strokeRect(rects[i].rectangle.left, rects[i].rectangle.top, rects[i].rectangle.width, rects[i].rectangle.height);
           }
+          console.log("done");
 
           
 
         }
         image.src = "data:image/png;base64," + base64;
-        await addPage("user", visionText);
+        //await addPage("user", visionText);
       }
     }
 
@@ -183,13 +185,18 @@ const CamPreview = () => {
       {url && (
         <div id="outside-wrap">
           <div id="image-container">
-            <img id="image" src={url} alt="Screenshot" />
+            
+            
+            <canvas ref={canvasRef} id="input-overlay" width={360} height={425}></canvas>
+            
           </div>
         </div>
       )}
+      <div>
       <p>{visionText}</p>
       <p>{tessText}</p>
-      <canvas ref={canvasRef} width={360} height={360}></canvas>
+      
+      </div>
     </>
   );
 };
