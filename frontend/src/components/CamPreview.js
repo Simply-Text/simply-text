@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from "react";
 import { addPage } from "../utils/firebase"
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { createWorker } from "tesseract.js";
+import Search from "./Search";
 
 const FACING_MODE_USER = { exact: "user" };
 const FACING_MODE_ENVIRONMENT = { exact: "environment" };
