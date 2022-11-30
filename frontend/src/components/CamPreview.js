@@ -196,7 +196,6 @@ const CamPreview = () => {
       <div>
       <p>{visionText}</p>
       <p>{tessText}</p>
-      
       </div>
     </>
   );
