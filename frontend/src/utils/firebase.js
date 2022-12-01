@@ -127,7 +127,10 @@ const searchWithFilters = async (query, filters) => {
       var docDate = doc.get("Date");
       var docAuthor = doc.get("Author");
       var rects = [];
+
       var doesInclude = false;
+      var dateCheck = false;
+
       var inData = false;
 
       var preview = "... ";
@@ -156,8 +159,19 @@ const searchWithFilters = async (query, filters) => {
       }
       console.log(doesInclude);
 
+      //check date
+      if(filters.date == "" || docDate == filters.date){
+        dateCheck = true;
+      }else if(filters.date.startsWith("after:")){
+        var curDate = Date.parse(filters.date.substring(6))
+        var pageDate = Date.parse(docDate);
+        if(curDate < pageDate){
+          dateCheck = true;
+        }
+      }
 
-      if (doesInclude && ((filters.date == "") ? true : docDate == filters.date) && (filters.author == "" ? true : docAuthor == filters.author)) {
+
+      if (doesInclude && dateCheck && (filters.author == "" ? true : docAuthor == filters.author)) {
         docList.push({ search: query, date: docDate, author: docAuthor, text: docText, image: doc.get("image"), data: docData, inDocData: inData,prev:preview,rects:rects });
       }
     } catch (e) {
