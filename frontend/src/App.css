@@ -22,6 +22,11 @@
   min-height: 2em;
 }
 
+::-webkit-resizer {
+  background: url(../public/resize.png) no-repeat scroll 0px 0px;
+  background-size: 15px;
+}
+
 .text-handler>button {
   display: block;
   margin: auto;
