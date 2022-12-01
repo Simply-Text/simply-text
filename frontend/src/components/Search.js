@@ -49,7 +49,7 @@ const Search = () => {
                 </div>
                 {withFilters ? <div className="search-filters" visibility="hidden">
                     <span className="date-filter">
-                        <button onClick={() => {
+                        <button className="button" onClick={() => {
                             setFilterShown("date");
                         }}>Date</button>
                         {filterShown == "date" ? <input value={filters.date} type="text" onChange={
@@ -59,7 +59,7 @@ const Search = () => {
                             }} /> : null}
                     </span>
                     <span className="author-filter">
-                        <button onClick={() => {
+                        <button className="button" onClick={() => {
                             setFilterShown("author");
                         }}>Author</button>
                         {filterShown == "author" ? <input value={filters.author} type="text" onChange={
