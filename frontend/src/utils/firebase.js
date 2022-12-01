@@ -103,10 +103,10 @@ const simpleSearch = async (query) => {
     const docList = new Array();
     snapshot.forEach((doc) => {
       let content = doc.get("Content");
-      if(content.includes(query)){
+      if (content.includes(query)) {
         docList.push("Date: " + doc.get("Date") + "\nAuthor: " + doc.get("Author") + "\nContent: " + doc.get("Content"));
       }
-      
+
     });
     return docList;
   } catch (e) {
@@ -115,48 +115,73 @@ const simpleSearch = async (query) => {
 }
 
 const searchWithFilters = async (query, filters) => {
-  try{
+  var docList = new Array();
   const col = collection(db, "Pages");
   const snapshot = await getDocs(col);
+  
 
-  const docList = new Array();
-  snapshot.forEach((doc) => {
-    var docContent = doc.get("Content");
-    var docDate = doc.get("Date");
-    var docAuthor = doc.get("Author");
+    snapshot.forEach((doc) => {
+      try {
+      var docData = doc.get("wordData");
+      var docText = doc.get("userText");
+      var docDate = doc.get("Date");
+      var docAuthor = doc.get("Author");
+      var rects = [];
+      var doesInclude = false;
+      var inData = false;
 
-    var doesInclude = false;
-
-    //scan through content
-    for(var i = 0; i < docContent.length; i++){
+      var preview = "... ";
+      //scan through wordData
       
+      for (var i = 0; i < docData.length; i++) {
+        for (var j = 0; j < docData[i].words.length; j++) {
+          console.log(docData)
+          console.log(docData.length + " | " + docData[i].words.length);
+          console.log(query + " | " + docData[i].words[j].text );
+          if (docData[i].words[j].text.includes(query)) {
+            doesInclude = true;
+            inData = true;
+            rects.push( docData[i].words[j].rectangle);
+
+            //add preview
+            preview += (j-1 >= 0 ? docData[i].words[j-1].text : "") + " " +  docData[i].words[j].text + " " + (j+1 >= 0 ? docData[i].words[j+1].text : "") + " ... "
+          }
+        }
+      }
+
+      if (!doesInclude) {
+        doesInclude = docText.includes(query);
+
+        preview += docText.substring(docText.search(query), query.length + 10 ) + " ... "
+      }
+      console.log(doesInclude);
+
+
+      if (doesInclude && ((filters.date == "") ? true : docDate == filters.date) && (filters.author == "" ? true : docAuthor == filters.author)) {
+        docList.push({ search: query, date: docDate, author: docAuthor, text: docText, image: doc.get("image"), data: docData, inDocData: inData,prev:preview,rects:rects });
+      }
+    } catch (e) {
+      //console.log(e)
     }
 
+    });
 
-
-    if(doesInclude && ((filters.date == null)  ? true : docDate == filters.date) && (filters.author == null ? true : docAuthor == filters.author)){
-        docList.push({search:query, date:docDate, author: docAuthor, content: docContent});
-    }
-
-  });
-
-  return docList
-} catch (e){
-  console.error(e);
-}
+    return docList;
+  
 }
 
-const addPage = async (author, vResult, tResult, userText, image) => {
+const addPage = async (author, vResult, tResult, userText, image, wordData) => {
   const col = collection(db, "Pages");
   const d = new Date()
   const date = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate();
 
-  await addDoc(col,{
+  await addDoc(col, {
     Date: date,
     Author: author,
     Content: vResult,
     tResult: tResult,
     userText: userText,
+    wordData: wordData,
     image: image
   });
 }

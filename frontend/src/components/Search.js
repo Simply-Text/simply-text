@@ -2,16 +2,17 @@ import "./styles/Search.css";
 import { searchForText } from "../utils/typesense";
 import { simpleSearch, searchWithFilters } from "../utils/firebase";
 import React, { useRef } from "react";
+import { query } from "firebase/firestore";
 
 const Search = () => {
     const [searchTerm, setSearchTerm] = React.useState("");
     const [searchResults, setSearchResults] = React.useState("");
     const [withFilters, setWithFilters] = React.useState(false);
-    const [filters, setFilters] = React.useState({author:null,date:null});
-    const [filterShown,setFilterShown] = React.useState(null);
+    const [filters, setFilters] = React.useState({ author: "", date: "" });
+    const [filterShown, setFilterShown] = React.useState(null);
+    const [doneSearching, setDoneSearching] = React.useState(false);
+    const [resultDat, setResultDat] = React.useState({});
 
-    const [resultDat,setResultDat] = React.useState({results:[]});
-    
 
     return (
         <>
@@ -19,11 +20,14 @@ const Search = () => {
                 <div className="search-field">
                     <input type="text" className="search-box" onChange={(e) => {
                         setSearchTerm(e.target.value);
+                        console.log(searchTerm);
                     }}></input>
                     <button className="search-btn search-box" onClick={() => {
                         const results = searchWithFilters(searchTerm, filters);
                         results.then((e) => {
-                            setResultDat({results:e});
+                            console.log(e);
+                            setResultDat({ results: e });
+                            setDoneSearching(true);
                         });
 
                     }}>
@@ -45,22 +49,22 @@ const Search = () => {
                 </div>
                 {withFilters ? <div className="search-filters" visibility="hidden">
                     <span className="date-filter">
-                        <button onClick={() => { 
+                        <button onClick={() => {
                             setFilterShown("date");
-                            }}>Date</button>
+                        }}>Date</button>
                         {filterShown == "date" ? <input value={filters.date} type="text" onChange={
                             (e) => {
-                                setFilters({date:e.target.value,author:filters.author});
+                                setFilters({ date: e.target.value, author: filters.author });
                                 console.log(filters);
                             }} /> : null}
                     </span>
                     <span className="author-filter">
-                        <button onClick={() => { 
+                        <button onClick={() => {
                             setFilterShown("author");
-                            }}>Author</button>
+                        }}>Author</button>
                         {filterShown == "author" ? <input value={filters.author} type="text" onChange={
                             (e) => {
-                                setFilters({date:filters.date,author:e.target.value});
+                                setFilters({ date: filters.date, author: e.target.value });
                                 console.log(filters);
                             }} /> : null}
                     </span>
@@ -70,7 +74,7 @@ const Search = () => {
                     {filters.date != null ? <p>Date: {filters.date}</p> : null}
                     {filters.author != null ? <p>Author: {filters.author}</p> : null}
                     <h4>Search Results:</h4>
-                    {searchResults}
+                    {doneSearching ? <ResultList resultDat={resultDat} /> : null}
                 </div>
             </div>
         </>
@@ -78,24 +82,65 @@ const Search = () => {
     )
 }
 
-const ResultList = ({resultDat}) => {
+const ResultList = (resultDat) => {
+    const cnv = React.useRef(null)
+    const [selected, setSelected] = React.useState(false);
+    const [result, setResult] = React.useState({});
+    const printResults = () => {
+        console.log(resultDat.resultDat);
 
-    const renderDat = () => {
-        return resultDat.results.map( r => {
-                <div className="Result">
 
-                </div>
-            })
+        return (resultDat.resultDat.results.map(r =>
+            <div className="Result" key={r.author + r.date} onClick={() => {
+                setResult(r);
+                setSelected(true);
+            }} style={{ backgroundColor: "lightgray", borderColor: "darkgray", border: 1 + "px", padding: 5 + "px" }}>
+                <p>Author: {r.author}</p>
+                <p>Date: {r.date}</p>
+                <p>{r.prev}</p>
+            </div>)
+
+        );
     }
 
+    const inspect = () => {
+        var ctx = cnv.current.getContext("2d")
 
-    return(
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(0, 0, cnv.width, cnv.height);
+        ctx.strokeStyle = "#00FF00";
+
+        var image = new Image();
+        image.onload = () => {
+            ctx.drawImage(image, 0, 0);
+            for (let i = 0; i < result.rects.length; i++) {
+                ctx.strokeRect(result.rects[i].left, result.rects[i].top, result.rects[i].width, result.rects[i].height);
+            }
+        }
+        image.src = "data:image/png;base64," + result.image;
+
+        return (
+            <>
+                <h6>Author: {result.author}</h6>
+                <h6>Date: {result.date}</h6>
+                <h6>Content:</h6>
+                <p>{result.text}</p>
+            </>
+        );
+    }
+
+    return (
         <>
             <div className="scrollable">
-
+                {printResults()}
+            </div>
+            <div className="ResultInspector">
+                <h4>Inspect:</h4>
+                {selected ? inspect() : null}
+                <canvas ref={cnv} width={360} height={425}></canvas>
             </div>
         </>
-    )
+    );
 }
 
 

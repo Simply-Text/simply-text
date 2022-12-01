@@ -34,7 +34,7 @@ const CamPreview = () => {
   const [visionResult, setVisionResult] = React.useState(undefined);
   const [tessText, setTessText] = React.useState(null)
   const [facingMode, setFacingMode] = React.useState(FACING_MODE_ENVIRONMENT);
-
+  const [wordDat,setWordDat] = React.useState([]);
   //tesseract
 
   const runTesseract = async (base64, rectangle) => {
@@ -62,7 +62,7 @@ const CamPreview = () => {
           const result = await callGoogleVisionApi(base64);
           const visionText = result.response.responses[0].fullTextAnnotation.text;
           setVisionResult(result.response.responses[0]);
-
+          console.log(result)
 
         //find all rectangles
         var rects = [];
@@ -92,7 +92,7 @@ const CamPreview = () => {
           
           var wordPos = fullText.search(word.text);
           var linePos = fullText.search("\n");
-          console.log(wordPos + " | " + linePos);
+ 
           if(wordPos < linePos){ //word comes before line break
             content[curPar].words.push(word);
             fullText = fullText.substring(wordPos+1);
@@ -107,7 +107,10 @@ const CamPreview = () => {
 
         }
 
+        
+        setWordDat(content);
         console.log(content);
+        console.log(wordDat);
         setVisionText(visionText);
         setTessText(tessResult);
 
@@ -151,9 +154,7 @@ const CamPreview = () => {
             
             //draw rectangles
             for (let i = 0; i < rects.length; i++) {
-              console.log(i);
-              console.log(rects);
-              context.strokeRect(rects[i].rectangle.left, rects[i].rectangle.top, rects[i].rectangle.width, rects[i].rectangle.height);
+              context.strokeRect(rects[i].left, rects[i].top, rects[i].width, rects[i].height);
             }
             console.log("done");
 
@@ -162,7 +163,6 @@ const CamPreview = () => {
           }
           image.src = "data:image/png;base64," + base64;
 
-          //await addPage("user", visionText);
         } catch(e) {
           const canvas = canvasRef.current;
           const context = canvas.getContext("2d");
@@ -191,7 +191,7 @@ const CamPreview = () => {
   }, [base64]);
 
   const getTextHandler = React.useCallback(() => {
-    return <TextHandler fullText={visionText} image={base64} vResult={visionResult} tResult={tessText}/>
+    return <TextHandler fullText={visionText} image={base64} vResult={visionResult} tResult={tessText} wordData={wordDat}/>
   }, [visionText, visionResult, base64, tessText]);
 
   const flip = React.useCallback(() => {
