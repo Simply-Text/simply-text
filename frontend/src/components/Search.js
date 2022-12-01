@@ -70,7 +70,7 @@ const Filters = ({updateFilters}, curFilter) => {
     return (
     <div className="search-filters" visibility="hidden">
     <span className="date-filter">
-        <button onClick={() => {setFilterShown("date")}}>Date</button>
+        <button className="button" onClick={ () => {setFilterShown("date")}}>Date</button>
         {filterShown == "date" ? <input type="text" onChange={
             (e) => {
                 filterSet.date = e.target.value == "" ? null : e.target.value;
@@ -78,7 +78,7 @@ const Filters = ({updateFilters}, curFilter) => {
             }}/> : null}
     </span>
     <span className="author-filter">
-        <button onClick={() => {setFilterShown("author")}}>Author</button>
+        <button className="button" onClick={() => {setFilterShown("author")}}>Author</button>
         {filterShown == "author" ? <input type="text" onChange={
             (e) => {
                 filterSet.author = e.target.value == "" ? null : e.target.value;

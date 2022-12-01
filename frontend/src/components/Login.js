@@ -19,34 +19,31 @@ function Login() {
       //loading screen?
       return;
     }
-    if (user) navigate("/capture");
-  }, [user, loading]);
+    if (user) navigate("/homepage");
+  }, [user, loading, navigate]);
+
   return (
     <div>
       <div className="login-modal">
         <div className="email-auth">
           <div className="login-field">
             <div className="email-box">
-              <label name="username" htmlFor="username">
-                Email:
-              </label>
-              <input
-                className="login-textbox"
-                type="text"
-                aria-label="Username field"
-                name="username"
-                id="username"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="E-mail address"
-              />
+                <i className="emailImage"></i>
+                <input
+                  className="login-textbox email_textbox"
+                  type="text"
+                  aria-label="Username field"
+                  name="username"
+                  id="username"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email"
+                />
             </div>
             <div className="password-box">
-              <label name="password" htmlFor="password">
-                Password:
-              </label>
+              <i className="passwordImage"></i>
               <input
-                className="login-textbox"
+                className="login-textbox password_textbox"
                 type="password"
                 aria-label="Password field"
                 name="password"
@@ -57,11 +54,13 @@ function Login() {
               />
             </div>
 
-            <button className="button" onClick={() => logInWithEmailAndPassword(email, password)}>
-              Login
-            </button>
+            <div className="actions">
+              <button className="button" onClick={() => logInWithEmailAndPassword(email, password)}>
+                Login
+              </button>
 
-            <Link to="/reset">Forgot Password</Link>
+              <Link className="Link" to="/reset">Forgot Password</Link>
+            </div>
           </div>
           {
             // need to implement a register page
@@ -83,7 +82,7 @@ function Login() {
           </a>
         </div>
         <div className="register-button">
-          <Link to="/register">Don't have an account? Register here</Link>
+          <Link className="login" to="/register">Don't have an account? Register here</Link>
         </div>
         <div className="facebook-auth"></div>
       </div>

@@ -12,11 +12,9 @@ function Register() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   return (
-    <div>
+    <div className="register_box">
       <div className="name-box">
-        <label name="name" htmlFor="name">
-          Name:
-        </label>
+        <i className="nameImage"></i>
         <input
           className="login-textbox"
           type="text"
@@ -29,11 +27,9 @@ function Register() {
         />
       </div>
       <div className="email-box">
-        <label name="username" htmlFor="username">
-          Email:
-        </label>
+        <i className="emailImage"></i>
         <input
-          className="login-textbox"
+          className="login-textbox email_textbox"
           type="text"
           aria-label="Username field"
           name="username"
@@ -43,10 +39,8 @@ function Register() {
           placeholder="E-mail address"
         />
       </div>
-      <div className="password-box">
-        <label name="password" htmlFor="password">
-          Password:
-        </label>
+      <div className="password-box password-textbox">
+        <i className="passwordImage"></i>
         <input
           className="login-textbox"
           type="password"
@@ -59,7 +53,7 @@ function Register() {
         />
       </div>
 
-      <button
+      <button className="button"
         onClick={() => {
           return registerWithEmailAndPassword(name, email, password);
         }}
@@ -70,6 +64,7 @@ function Register() {
         className="btn btn-outline-dark"
         role="button"
         onClick={() => signInWithGoogle()}
+        href="/register"
       >
         <img
           width="20px"

@@ -136,14 +136,18 @@ const searchWithFilters = async (query, filters) => {
 }
 }
 
-const addPage = async (author,content) => {
+const addPage = async (author, vResult, tResult, userText, image) => {
   const col = collection(db, "Pages");
   const d = new Date()
   const date = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate();
+
   await addDoc(col,{
     Date: date,
     Author: author,
-    Content: content
+    Content: vResult,
+    tResult: tResult,
+    userText: userText,
+    image: image
   });
 }
 

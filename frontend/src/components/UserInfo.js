@@ -3,6 +3,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, db, logout } from "../utils/firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
+import HomePage from "./HomePage";
 
 function UserInfo() {
   const [user, loading, error] = useAuthState(auth);
@@ -30,8 +31,8 @@ function UserInfo() {
         {user ? (
           <div>
             Logged in as
-            {name}
             <div>{user?.email}</div>
+            <HomePage/>
             <button className="dashboard__btn secondary button" onClick={handleLogout}>
               Logout
             </button>

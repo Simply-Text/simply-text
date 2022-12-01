@@ -5,7 +5,7 @@ import Search from "./components/Search";
 import {
   BrowserRouter as Router,
   Link,
-  Navigate,
+  redirect,
   Route,
   Routes,
 } from "react-router-dom";
@@ -13,17 +13,20 @@ import {
 import { AuthContext } from "./components/AuthProvider";
 
 function MainContent() {
-  console.log(useContext(AuthContext));
   const { currentUser } = useContext(AuthContext);
 
+  console.log(window.location.pathname);
+
   return !!currentUser ? (
+    <>
     <Routes>
       <Route exact path="/search" element={<Search />}></Route>
       <Route exact path="/capture" element={<CamPreview />}></Route>
     </Routes>
-  ) : (
-    <Link to="/login">login</Link>
-  );
+    </>
+  ) : (window.location.pathname === "/login") ? (
+    null
+  ) : (<Link className="login" to="/login">login</Link>);
 }
 
 export default MainContent;

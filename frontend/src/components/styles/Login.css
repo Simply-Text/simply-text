@@ -1,3 +1,72 @@
-.login-field {
+.login-field, .register_box{
+    margin: auto;
     display: block;
+    width: fit-content;
+}
+
+div>input {
+    margin-top: 10px;
+    border: none;
+	border-bottom: 2px solid #D1D1D4;
+	padding: 10px;
+    padding-left: 28px;
+	font-weight: 400;
+	width: 100%;
+	transition: .2s;
+}
+
+.emailImage {
+    position: absolute;
+    margin-top: 10px;
+    width: 40px;
+    height: 40px;
+    background: url(../../../public/emailIcon.png) no-repeat scroll 0px 13px;
+    background-size: 20px;
+}
+
+.passwordImage {
+    position: absolute;
+    width: 40px; height: 40px;
+    margin-top: 10px;
+    background: url(../../../public/lockicon.png) no-repeat scroll 0px 13px;
+    background-size: 20px;
+}
+
+.nameImage {
+    position: absolute;
+    width: 40px; height: 40px;
+    margin-top: 10px;
+    background: url(../../../public/nameIcon.png) no-repeat scroll 0px 13px;
+    background-size: 20px;
+}
+
+div>input:active,
+div>input:focus,
+div>input:hover {
+	outline: none;
+	border-bottom-color: #6A679E;
+}
+
+input:autofill {
+    -webkit-text-fill-color: black;
+    -webkit-box-shadow: 0 0 0px 40rem #ffff inset;
+}
+
+input:-webkit-autofill:active {
+    -webkit-text-fill-color: black;
+    -webkit-box-shadow: 0 0 0px 40rem #ffff inset;
+}
+
+.actions>Link {
+    margin: 10px;
+}
+
+a, .Link {
+    color: #00B7FF;
+    text-decoration: none;
+    margin: 10px;
+}
+
+a>img {
+    margin-right: 5px;
 }

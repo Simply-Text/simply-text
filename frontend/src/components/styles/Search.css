@@ -1,17 +1,33 @@
 .search-field{
     background-color: lightgrey;
     width: fit-content;
-    margin: 10px;
+    margin: auto;
+    margin-top: 10px;
     padding: 10px;
-    margin-left: 40%;
     border-radius: 10%/50%;
 }
 
 *.search-box{
+    margin: auto;
     background-color: lightgrey;
     height: auto;
     border: 0;
 }
+
+input.search-box {
+    padding-right: 15px;
+    padding-bottom: 3px;
+    width: 70%;
+}
+
+.search-filters {
+    margin: 12px;
+}
+
+input.search-box:focus{
+    outline:none;
+}
+
 button.search-field{
     width: max-content;
     height: auto;
@@ -24,10 +40,12 @@ button.search-filters{
 }
 
 .search-results {
+    width: 360px;
     height:max-content;
     white-space: pre-wrap;
     text-align: left;
-    padding-left: 40%;
+    margin:auto;
+    margin-top: 15px;
 }
 
 @keyframes enlarge {
