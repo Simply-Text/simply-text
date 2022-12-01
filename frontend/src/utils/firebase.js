@@ -121,12 +121,22 @@ const searchWithFilters = async (query, filters) => {
 
   const docList = new Array();
   snapshot.forEach((doc) => {
-    let content = doc.get("Content");
-    let date = doc.get("Date");
-    let author = doc.get("Author");
-      if(content.includes(query) && ((filters.date == null)  ? true : date == filters.date) && (filters.author == null ? true : author == filters.author)){
-        docList.push("Date: " + doc.get("Date") + "\nAuthor: " + doc.get("Author") + "\nContent: " + doc.get("Content"));
-      }
+    var docContent = doc.get("Content");
+    var docDate = doc.get("Date");
+    var docAuthor = doc.get("Author");
+
+    var doesInclude = false;
+
+    //scan through content
+    for(var i = 0; i < docContent.length; i++){
+      
+    }
+
+
+
+    if(doesInclude && ((filters.date == null)  ? true : docDate == filters.date) && (filters.author == null ? true : docAuthor == filters.author)){
+        docList.push({search:query, date:docDate, author: docAuthor, content: docContent});
+    }
 
   });
 

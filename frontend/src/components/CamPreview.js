@@ -66,10 +66,15 @@ const CamPreview = () => {
         //find all rectangles
         var rects = [];
         var tessResult = "";
-        const rawResults = result.response.responses[0].fullTextAnnotation.pages[0].blocks;
+        const rawResults = result.response.responses[0].textAnnotations;
 
-        for (let i = 0; i < rawResults.length; i++) {
-          const vertices = rawResults[i].boundingBox.vertices;
+        var fullText = rawResults[0].description;
+
+        var content = [{ words: [] }]; //send to firebase
+        var curPar = 0;
+        //build results
+        for (let i = 1; i < rawResults.length; i++) {
+          const vertices = rawResults[i].boundingPoly.vertices;
           const xMin = Math.min(vertices[0].x, vertices[1].x, vertices[2].x, vertices[3].x);
           const xMax = Math.max(vertices[0].x, vertices[1].x, vertices[2].x, vertices[3].x);
           const yMin = Math.min(vertices[0].y, vertices[1].y, vertices[2].y, vertices[3].y);
@@ -77,13 +82,31 @@ const CamPreview = () => {
           const w = xMax - xMin;
           const h = yMax - yMin;
 
-          const rect = { rectangle: { top: yMin-3, left: xMin-3, width: w+6, height: h+6 } };
+          const word = { text: rawResults[i].description, rectangle: { top: yMin - 3, left: xMin - 3, width: w + 6, height: h + 6 } };
           //tessResult += " | " + await runTesseract(base64, rect);
 
-          rects.push(rect);
+          rects.push(word.rectangle);
+
+          //add word to content
+          
+          var wordPos = fullText.search(word.text);
+          var linePos = fullText.search("\n");
+          console.log(wordPos + " | " + linePos);
+          if(wordPos < linePos){ //word comes before line break
+            content[curPar].words.push(word);
+            fullText = fullText.substring(wordPos+1);
+          } else {
+            curPar++;
+            content.push({ words: [] })
+            content[curPar].words.push(word);
+            fullText = fullText.substring(linePos+1);
+          }
+
+
+
         }
 
-
+        console.log(content);
         setVisionText(visionText);
         setTessText(tessResult);
 
@@ -93,16 +116,16 @@ const CamPreview = () => {
         const canvas = canvasRef.current;
         const context = canvas.getContext("2d");
 
-        
+
         context.fillStyle = "#FFFFFF";
-        context.fillRect(0,0,canvas.width,canvas.height);
+        context.fillRect(0, 0, canvas.width, canvas.height);
         context.strokeStyle = "#00FF00";
         var image = new Image();
         image.onload = () => {
 
 
           context.drawImage(image, 0, 0);
-          
+
           //find lines
           //turn to black and white for line detection
           var width = image.width;
@@ -121,23 +144,21 @@ const CamPreview = () => {
             }
           }
 
-          context.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
+          //context.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
 
           //TODO: add line detection
-          
+
           //draw rectangles
           for (let i = 0; i < rects.length; i++) {
-            console.log(i);
-            console.log(rects);
-            context.strokeRect(rects[i].rectangle.left, rects[i].rectangle.top, rects[i].rectangle.width, rects[i].rectangle.height);
+            context.strokeRect(rects[i].left, rects[i].top, rects[i].width, rects[i].height);
           }
           console.log("done");
 
-          
+
 
         }
         image.src = "data:image/png;base64," + base64;
-        //await addPage("user", visionText);
+        //await addPage("user", content);
       }
     }
 
@@ -186,16 +207,16 @@ const CamPreview = () => {
       {url && (
         <div id="outside-wrap">
           <div id="image-container">
-            
-            
+
+
             <canvas ref={canvasRef} id="input-overlay" width={360} height={425}></canvas>
-            
+
           </div>
         </div>
       )}
       <div>
-      <p>{visionText}</p>
-      <p>{tessText}</p>
+        <p>{visionText}</p>
+        <p>{tessText}</p>
 
       </div>
     </>
