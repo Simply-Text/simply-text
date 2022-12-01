@@ -1,10 +1,11 @@
 import "./styles/CamPreview.css";
+import "./styles/Main.css";
 import Webcam from "react-webcam";
 import React, { useEffect, useRef } from "react";
-import { addPage } from "../utils/firebase"
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { createWorker } from "tesseract.js";
-import Search from "./Search";
+import { useNavigate } from "react-router-dom";
+import TextHandler from "./ExtractedTextHandler";
 
 const FACING_MODE_USER = { exact: "user" };
 const FACING_MODE_ENVIRONMENT = { exact: "environment" };
@@ -29,9 +30,9 @@ const CamPreview = () => {
   const canvasRef = useRef(null);
   const [url, setUrl] = React.useState(null);
   const [base64, setBase64] = React.useState(null);
-  const [visionText, setVisionText] = React.useState("No Extracted Text");
+  const [visionText, setVisionText] = React.useState(null);
   const [visionResult, setVisionResult] = React.useState(undefined);
-  const [tessText, setTessText] = React.useState("No Extracted Text")
+  const [tessText, setTessText] = React.useState(null)
   const [facingMode, setFacingMode] = React.useState(FACING_MODE_ENVIRONMENT);
 
   //tesseract
@@ -56,12 +57,12 @@ const CamPreview = () => {
   useEffect(() => {
     async function fetchResult() {
       if (base64) {
-        const result = await callGoogleVisionApi(base64);
-        const visionText = result.response.responses[0].fullTextAnnotation.text;
 
-        //Tesseract
+        try {
+          const result = await callGoogleVisionApi(base64);
+          const visionText = result.response.responses[0].fullTextAnnotation.text;
+          setVisionResult(result.response.responses[0]);
 
-        console.log(result);
 
         //find all rectangles
         var rects = [];
@@ -113,57 +114,85 @@ const CamPreview = () => {
 
 
 
-        const canvas = canvasRef.current;
-        const context = canvas.getContext("2d");
+          const canvas = canvasRef.current;
+          const context = canvas.getContext("2d");
+
+          
+          context.fillStyle = "#FFFFFF";
+          context.fillRect(0,0,canvas.width,canvas.height);
+          context.strokeStyle = "#00FF00";
+          var image = new Image();
+          image.onload = () => {
 
 
-        context.fillStyle = "#FFFFFF";
-        context.fillRect(0, 0, canvas.width, canvas.height);
-        context.strokeStyle = "#00FF00";
-        var image = new Image();
-        image.onload = () => {
+            context.drawImage(image, 0, 0);
+            
+            //find lines
+            //turn to black and white for line detection
+            var width = image.width;
+            var height = image.height;
+            var imgPixels = context.getImageData(0, 0, width, height);
 
+            // for (var y = 0; y < height; y++) {
+            //   for (var x = 0; x < width; x++) {
+            //     var i = (y * 4) * width + x * 4;
 
-          context.drawImage(image, 0, 0);
+            //     var total = ((imgPixels.data[i] + imgPixels.data[i + 1] + imgPixels.data[i + 2]) > 500) ? 255 : 0;
 
-          //find lines
-          //turn to black and white for line detection
-          var width = image.width;
-          var height = image.height;
-          var imgPixels = context.getImageData(0, 0, width, height);
+            //     imgPixels.data[i] = total;
+            //     imgPixels.data[i + 1] = total;
+            //     imgPixels.data[i + 2] = total;
+            //   }
+            // }
 
-          for (var y = 0; y < height; y++) {
-            for (var x = 0; x < width; x++) {
-              var i = (y * 4) * width + x * 4;
+            context.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
 
-              var total = ((imgPixels.data[i] + imgPixels.data[i + 1] + imgPixels.data[i + 2]) > 500) ? 255 : 0;
-
-              imgPixels.data[i] = total;
-              imgPixels.data[i + 1] = total;
-              imgPixels.data[i + 2] = total;
+            //TODO: add line detection
+            
+            //draw rectangles
+            for (let i = 0; i < rects.length; i++) {
+              console.log(i);
+              console.log(rects);
+              context.strokeRect(rects[i].rectangle.left, rects[i].rectangle.top, rects[i].rectangle.width, rects[i].rectangle.height);
             }
+            console.log("done");
+
+            
+
           }
+          image.src = "data:image/png;base64," + base64;
 
-          //context.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
+          //await addPage("user", visionText);
+        } catch(e) {
+          const canvas = canvasRef.current;
+          const context = canvas.getContext("2d");
+          
+          context.fillStyle = "#FFFFFF";
+          context.fillRect(0,0,canvas.width,canvas.height);
+          context.strokeStyle = "#00FF00";
+          var imageNoData = new Image();
+          imageNoData.onload = () => {
+            context.drawImage(imageNoData, 0, 0);
 
-          //TODO: add line detection
+            var width = imageNoData.width;
+            var height = imageNoData.height;
+            var imgPixels = context.getImageData(0, 0, width, height);
+            context.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
 
-          //draw rectangles
-          for (let i = 0; i < rects.length; i++) {
-            context.strokeRect(rects[i].left, rects[i].top, rects[i].width, rects[i].height);
           }
-          console.log("done");
-
-
-
+          imageNoData.src = "data:image/png;base64," + base64;
+          setTessText(null);
+          setVisionText(null);
         }
-        image.src = "data:image/png;base64," + base64;
-        //await addPage("user", content);
       }
     }
 
     fetchResult();
   }, [base64]);
+
+  const getTextHandler = React.useCallback(() => {
+    return <TextHandler fullText={visionText} image={base64} vResult={visionResult} tResult={tessText}/>
+  }, [visionText, visionResult, base64, tessText]);
 
   const flip = React.useCallback(() => {
 
@@ -177,8 +206,9 @@ const CamPreview = () => {
   }, []);
 
   const clearScreen = React.useCallback(() => {
-    setVisionResult("No Extracted Text");
-    setTessText("No Extracted Text");
+    setVisionResult(null);
+    setVisionText(null);
+    setTessText(null);
     setUrl(null);
   }, []);
 
@@ -207,17 +237,12 @@ const CamPreview = () => {
       {url && (
         <div id="outside-wrap">
           <div id="image-container">
-
-
             <canvas ref={canvasRef} id="input-overlay" width={360} height={425}></canvas>
-
           </div>
         </div>
       )}
       <div>
-        <p>{visionText}</p>
-        <p>{tessText}</p>
-
+        {getTextHandler()}
       </div>
     </>
   );

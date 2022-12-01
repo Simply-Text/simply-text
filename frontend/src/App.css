@@ -2,6 +2,27 @@
   text-align: center;
 }
 
-.company-title {
+.company-title a {
   color: var(--navy);
+  text-decoration: none;
+}
+
+.login {
+  color: var(--navy);
+  text-decoration: none;
+}
+
+.text-handler {
+  margin: auto;
+  width: fit-content;
+}
+
+.text-handler>textarea {
+  min-width: 20em;
+  min-height: 2em;
+}
+
+.text-handler>button {
+  display: block;
+  margin: auto;
 }
