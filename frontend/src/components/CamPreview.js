@@ -15,8 +15,8 @@ const cloudVisionCall = httpsCallable(functions, 'callCloudVision');
 
 const videoConstraints = {
   facingMode: FACING_MODE_ENVIRONMENT,
+  width: 360, 
   height: 465,
-  width: 360
 };
 
 const callGoogleVisionApi = async (base64) => {
@@ -24,6 +24,20 @@ const callGoogleVisionApi = async (base64) => {
   const result = googleVisionRes;
   return result.data
 }
+
+const webcamComponent = (camPreview, onUserMedia, facingMode) => {
+  return (
+    <Webcam
+        className="webcam-component"
+        ref={camPreview}
+        screenshotFormat="image/png"
+        videoConstraints={{ ...videoConstraints, facingMode }}
+        onUserMedia={onUserMedia}
+        mirrored={false}
+        screenshotQuality={0.7}
+      ></Webcam>
+  );
+};
 
 const CamPreview = () => {
   const camPreview = useRef(null);
@@ -214,20 +228,12 @@ const CamPreview = () => {
 
   const onUserMedia = (e) => {
     console.log(e);
-  };
+  }
 
   return (
     <>
       <div id="webcam">
-        <Webcam
-          className="webcam-component"
-          ref={camPreview}
-          screenshotFormat="image/png"
-          videoConstraints={{ ...videoConstraints, facingMode }}
-          onUserMedia={onUserMedia}
-          mirrored={false}
-          screenshotQuality={0.7}
-        />
+      {webcamComponent(camPreview, onUserMedia(), facingMode)}
       </div>
       <div className="button-group">
         <button className="button secondary" onClick={() => clearScreen()}>Clear</button>
