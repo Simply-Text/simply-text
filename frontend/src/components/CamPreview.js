@@ -35,7 +35,7 @@ const webcamComponent = (camPreview, onUserMedia, facingMode) => {
         videoConstraints={{ ...videoConstraints, facingMode }}
         onUserMedia={onUserMedia}
         mirrored={false}
-        screenshotQuality={0.7}
+        screenshotQuality={1}
       ></Webcam>
   );
 };
@@ -171,10 +171,6 @@ const CamPreview = () => {
             for (let i = 0; i < rects.length; i++) {
               context.strokeRect(rects[i].left, rects[i].top, rects[i].width, rects[i].height);
             }
-            console.log("done");
-
-            
-
           }
           image.src = "data:image/png;base64," + base64;
 
@@ -207,7 +203,7 @@ const CamPreview = () => {
 
   const getTextHandler = React.useCallback(() => {
     return <TextHandler fullText={visionText} image={base64} vResult={visionResult} tResult={tessText} wordData={wordDat}/>
-  }, [visionText, visionResult, base64, tessText, wordDat]);
+  }, [visionText]);
 
   const flip = React.useCallback(() => {
 
@@ -228,7 +224,7 @@ const CamPreview = () => {
   }, []);
 
   const onUserMedia = (e) => {
-    console.log(e);
+
   }
 
   return (
@@ -237,7 +233,7 @@ const CamPreview = () => {
       {webcamComponent(camPreview, onUserMedia(), facingMode)}
       </div>
       <div className="button-group">
-        <button className="button secondary" onClick={() => clearScreen()}>Clear</button>
+        <button key={true} className="button secondary" onClick={() => clearScreen()}>Clear</button>
         <button className="button" onClick={capturePhoto}>Capture</button>
         <button className="button secondary" onClick={flip}>Flip</button>
       </div>

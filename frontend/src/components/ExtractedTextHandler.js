@@ -10,7 +10,7 @@ const TextHandler = (props) => {
 
     useEffect(() => {
         setPropText(props.fullText);
-    }, [props]);
+    }, [props.fullText]);
 
     const saveText = async () => {
         await addPage(user?.email, props.vResult, props.tResult, ref.current.value, props.image,props.wordData);
@@ -19,7 +19,6 @@ const TextHandler = (props) => {
 
     const changeWordDat = (par,word,change) => {
         props.wordData[par].words[word] = change;
-        console.log(props.wordData);
     }
 
     const getSentence = (arr,parIdx) => {
@@ -46,7 +45,7 @@ const TextHandler = (props) => {
     if (propText != null) {
         return (
             <div className="text-handler">
-                <textarea rows={6} defaultValue={propText} ref={ref}></textarea>
+                <textarea key={true} rows={6} value={propText} ref={ref}></textarea>
                 {/*{makeDisplay()}*/}
                 
                 <button className="button" onClick={() => saveText()}>Save</button>
@@ -55,7 +54,7 @@ const TextHandler = (props) => {
     } else {
         return (
             <div className="text-handler">
-                <textarea readOnly={true} key={true} defaultValue={"No text to display"}></textarea>
+                <textarea readOnly={true} defaultValue={"No text to display"}></textarea>
                 <button disabled={true} className="button">Save</button>
             </div>
         );
