@@ -15,8 +15,9 @@ const cloudVisionCall = httpsCallable(functions, 'callCloudVision');
 
 const videoConstraints = {
   facingMode: FACING_MODE_ENVIRONMENT,
-  height: 465,
-  width: 360
+  width: { min: 480 },
+  height: { min: 720 },
+  aspectRatio: 0.776
 };
 
 const callGoogleVisionApi = async (base64) => {
