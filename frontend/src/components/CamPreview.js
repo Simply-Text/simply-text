@@ -46,7 +46,7 @@ const CamPreview = () => {
   const [visionResult, setVisionResult] = React.useState(undefined);
   const [tessText, setTessText] = React.useState(null)
   const [facingMode, setFacingMode] = React.useState(FACING_MODE_ENVIRONMENT);
-
+  const [wordDat,setWordDat] = React.useState([]);
   //tesseract
 
   const runTesseract = async (base64, rectangle) => {
@@ -74,30 +74,57 @@ const CamPreview = () => {
           const result = await callGoogleVisionApi(base64);
           const visionText = result.response.responses[0].fullTextAnnotation.text;
           setVisionResult(result.response.responses[0]);
+          console.log(result)
 
-          //find all rectangles
-          var rects = [];
-          var tessResult = "";
-          const rawResults = result.response.responses[0].fullTextAnnotation.pages[0].blocks;
+        //find all rectangles
+        var rects = [];
+        var tessResult = "";
+        const rawResults = result.response.responses[0].textAnnotations;
 
-          for (let i = 0; i < rawResults.length; i++) {
-            const vertices = rawResults[i].boundingBox.vertices;
-            const xMin = Math.min(vertices[0].x, vertices[1].x, vertices[2].x, vertices[3].x);
-            const xMax = Math.max(vertices[0].x, vertices[1].x, vertices[2].x, vertices[3].x);
-            const yMin = Math.min(vertices[0].y, vertices[1].y, vertices[2].y, vertices[3].y);
-            const yMax = Math.max(vertices[0].y, vertices[1].y, vertices[2].y, vertices[3].y);
-            const w = xMax - xMin;
-            const h = yMax - yMin;
+        var fullText = rawResults[0].description;
 
-            const rect = { rectangle: { top: yMin-3, left: xMin-3, width: w+6, height: h+6 } };
-            //tessResult += " | " + await runTesseract(base64, rect);
+        var content = [{ words: [] }]; //send to firebase
+        var curPar = 0;
+        //build results
+        for (let i = 1; i < rawResults.length; i++) {
+          const vertices = rawResults[i].boundingPoly.vertices;
+          const xMin = Math.min(vertices[0].x, vertices[1].x, vertices[2].x, vertices[3].x);
+          const xMax = Math.max(vertices[0].x, vertices[1].x, vertices[2].x, vertices[3].x);
+          const yMin = Math.min(vertices[0].y, vertices[1].y, vertices[2].y, vertices[3].y);
+          const yMax = Math.max(vertices[0].y, vertices[1].y, vertices[2].y, vertices[3].y);
+          const w = xMax - xMin;
+          const h = yMax - yMin;
 
-            rects.push(rect);
+          const word = { text: rawResults[i].description, rectangle: { top: yMin - 3, left: xMin - 3, width: w + 6, height: h + 6 } };
+          //tessResult += " | " + await runTesseract(base64, rect);
+
+          rects.push(word.rectangle);
+
+          //add word to content
+          
+          var wordPos = fullText.search(word.text);
+          var linePos = fullText.search("\n");
+ 
+          if(wordPos < linePos){ //word comes before line break
+            content[curPar].words.push(word);
+            fullText = fullText.substring(wordPos+1);
+          } else {
+            curPar++;
+            content.push({ words: [] })
+            content[curPar].words.push(word);
+            fullText = fullText.substring(linePos+1);
           }
 
 
-          setVisionText(visionText);
-          setTessText(tessResult);
+
+        }
+
+        
+        setWordDat(content);
+        console.log(content);
+        console.log(wordDat);
+        setVisionText(visionText);
+        setTessText(tessResult);
 
 
 
@@ -139,9 +166,7 @@ const CamPreview = () => {
             
             //draw rectangles
             for (let i = 0; i < rects.length; i++) {
-              console.log(i);
-              console.log(rects);
-              context.strokeRect(rects[i].rectangle.left, rects[i].rectangle.top, rects[i].rectangle.width, rects[i].rectangle.height);
+              context.strokeRect(rects[i].left, rects[i].top, rects[i].width, rects[i].height);
             }
             console.log("done");
 
@@ -150,7 +175,6 @@ const CamPreview = () => {
           }
           image.src = "data:image/png;base64," + base64;
 
-          //await addPage("user", visionText);
         } catch(e) {
           const canvas = canvasRef.current;
           const context = canvas.getContext("2d");
@@ -179,7 +203,7 @@ const CamPreview = () => {
   }, [base64]);
 
   const getTextHandler = React.useCallback(() => {
-    return <TextHandler fullText={visionText} image={base64} vResult={visionResult} tResult={tessText}/>
+    return <TextHandler fullText={visionText} image={base64} vResult={visionResult} tResult={tessText} wordData={wordDat}/>
   }, [visionText, visionResult, base64, tessText]);
 
   const flip = React.useCallback(() => {
