@@ -36,7 +36,7 @@ function Register() {
           id="username"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="E-mail address"
+          placeholder="Email"
         />
       </div>
       <div className="password-box password-textbox">

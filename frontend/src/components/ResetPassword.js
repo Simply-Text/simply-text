@@ -16,7 +16,7 @@ function ResetPassword() {
         id="reset-email"
         value={resetEmail}
         onChange={(e) => setResetEmail(e.target.value)}
-        placeholder="E-mail address"
+        placeholder="Email"
       ></input>
       <button
         onClick={async () => {
