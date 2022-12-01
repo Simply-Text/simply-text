@@ -13,8 +13,11 @@ const FACING_MODE_ENVIRONMENT = { exact: "environment" };
 const functions = getFunctions(undefined, 'northamerica-northeast1');
 const cloudVisionCall = httpsCallable(functions, 'callCloudVision');
 
+const screenWidth = window.screen.width;
+
 const videoConstraints = {
   facingMode: FACING_MODE_ENVIRONMENT,
+  width: {max: screenWidth, ideal: 360}
 };
 
 const callGoogleVisionApi = async (base64) => {
@@ -204,7 +207,7 @@ const CamPreview = () => {
 
   const getTextHandler = React.useCallback(() => {
     return <TextHandler fullText={visionText} image={base64} vResult={visionResult} tResult={tessText} wordData={wordDat}/>
-  }, [visionText, visionResult, base64, tessText]);
+  }, [visionText, visionResult, base64, tessText, wordDat]);
 
   const flip = React.useCallback(() => {
 
@@ -241,7 +244,7 @@ const CamPreview = () => {
       {url && (
         <div id="outside-wrap">
           <div id="image-container">
-            <canvas ref={canvasRef} id="input-overlay" width={360} height={425}></canvas>
+            <canvas ref={canvasRef} id="input-overlay" height={464}></canvas>
           </div>
         </div>
       )}

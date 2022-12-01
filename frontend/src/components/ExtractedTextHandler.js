@@ -46,7 +46,7 @@ const TextHandler = (props) => {
     if (propText != null) {
         return (
             <div className="text-handler">
-                <textarea defaultValue={propText} ref={ref}></textarea>
+                <textarea rows={6} defaultValue={propText} ref={ref}></textarea>
                 {/*{makeDisplay()}*/}
                 
                 <button className="button" onClick={() => saveText()}>Save</button>

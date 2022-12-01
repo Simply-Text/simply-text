@@ -20,11 +20,12 @@
 .text-handler>textarea {
   min-width: 20em;
   min-height: 2em;
+  height: fit-content;
 }
 
 ::-webkit-resizer {
   background: url(../public/resize.png) no-repeat scroll 0px 0px;
-  background-size: 15px;
+  background-size: 1em;
 }
 
 .text-handler>button {
